@@ -24,4 +24,9 @@ public class MainActivity extends AppCompatActivity {
         });
         DynamicColors.applyToActivityIfAvailable(this);
     }
+
+
+    private void changeCity(String city){
+
+    }
 }
