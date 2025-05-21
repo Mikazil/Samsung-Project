@@ -12,7 +12,7 @@
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Введите город"
+        android:hint="@string/enter_city"
         android:text="Москва"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/weatherCondition"/>
@@ -26,7 +26,7 @@
 
         android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar" />
+        app:layout_constraintTop_toBottomOf="@id/search_bar"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/weatherTemperature"
@@ -93,7 +93,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Влажность"
+                    android:text="@string/humidity"
                     android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                     android:layout_marginTop="8dp"/>
 
@@ -131,7 +131,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Давление"
+                    android:text="@string/pressure"
                     android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                     android:layout_marginTop="8dp"/>
 
