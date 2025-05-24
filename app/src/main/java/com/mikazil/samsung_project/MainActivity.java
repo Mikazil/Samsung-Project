@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.color.DynamicColors;
 
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
