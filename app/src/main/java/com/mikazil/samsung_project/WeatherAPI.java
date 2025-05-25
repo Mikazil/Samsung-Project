@@ -1,5 +1,6 @@
 package com.mikazil.samsung_project;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -14,7 +15,7 @@ public class WeatherAPI {
     private static final String LOG_TAG = "WeatherAPI";
 
 
-    private String getWeather(String API_URL){
+    private static String getWeather(String API_URL){
         String res = null;
         HttpURLConnection connection = null;
         InputStream inputStream = null;
@@ -50,13 +51,13 @@ public class WeatherAPI {
         return res;
     }
 
-    public String getWeatherDataByCity(String City) {
+    public static String getWeatherDataByCity(String City) {
         //https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
          String API_URL = "https://api.openweathermap.org/data/2.5/weather?q=" + City + "&appid=" + API_KEY;
          return getWeather(API_URL);
     }
 
-    public String getWeatherDataByCoordinates(String Latitude, String Longitude) {
+    public static String getWeatherDataByCoordinates(String Latitude, String Longitude) {
         //https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
         String API_URL = "https://api.openweathermap.org/data/2.5/weather?lat="+ Latitude + "&lon=" + Longitude + "&appid=" + API_KEY;
         return getWeather(API_URL);
