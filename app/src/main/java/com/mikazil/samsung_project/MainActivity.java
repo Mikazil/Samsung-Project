@@ -1,6 +1,7 @@
 package com.mikazil.samsung_project;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -32,7 +33,21 @@ public class MainActivity extends AppCompatActivity {
         });
 
         DynamicColors.applyToActivityIfAvailable(this);
-        binding.feelsLike.setText(WeatherAPI.getWeatherDataByCity("London"));
+        WeatherAPI.getWeatherDataByCity("London", new WeatherAPI.WeatherCallback() {
+            @Override
+            public void onSuccess(String response) {
+                // Обработка ответа
+                Log.d("TAG", response);
+                binding.feelsLike.setText(response);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // Обработка ошибки
+                Log.d("TAG", t.toString());
+            }
+        });
+
 
     }
 

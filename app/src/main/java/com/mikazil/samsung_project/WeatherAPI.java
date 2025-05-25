@@ -1,66 +1,101 @@
 package com.mikazil.samsung_project;
 
-import android.os.AsyncTask;
 import android.util.Log;
-
-import java.io.BufferedReader;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-public class WeatherAPI {
-    private static final String API_KEY = "b37d8af2cceace36578fa5899ad6a9f8";
-    //private static final String API_URL = "https://api.openweathermap.org/data/2.5/weather?q=London&appid=" + API_KEY;
-    private static final String LOG_TAG = "WeatherAPI";
 
+abstract class WeatherRequestHandler {
+    protected static final String API_KEY = "b37d8af2cceace36578fa5899ad6a9f8";
+    protected static final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
+    protected static final String LOG_TAG = "WeatherAPI";
 
-    private static String getWeather(String API_URL){
-        String res = null;
-        HttpURLConnection connection = null;
-        InputStream inputStream = null;
-        try {
-            URL url = new URL(API_URL);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+    protected final OpenWeatherMapService service;
 
-            inputStream = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder result = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-            res = result.toString();
-            //return result.toString();
-        } catch (IOException e) {
-            Log.d(LOG_TAG, "IOException: " + e);
+    public WeatherRequestHandler() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    Log.d(LOG_TAG, "inputStream.close IOException: " + e);
+        service = retrofit.create(OpenWeatherMapService.class);
+    }
+
+    // Обработчик ответов
+    protected void handleResponse(Call<ResponseBody> call, WeatherAPI.WeatherCallback callback) {
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String result = response.body().string();
+                        callback.onSuccess(result);
+                    } catch (IOException e) {
+                        handleError("Response parsing error: " + e.getMessage(), callback, e);
+                    }
+                } else {
+                    handleError("HTTP error: " + response.code(), callback,
+                            new IOException("Request failed"));
                 }
             }
-        }
-        return res;
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                handleError("Request failed: " + t.getMessage(), callback, t);
+            }
+        });
     }
 
-    public static String getWeatherDataByCity(String City) {
-        //https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-         String API_URL = "https://api.openweathermap.org/data/2.5/weather?q=" + City + "&appid=" + API_KEY;
-         return getWeather(API_URL);
+    private void handleError(String message, WeatherAPI.WeatherCallback callback, Throwable t) {
+        Log.e(LOG_TAG, message);
+        callback.onFailure(t);
     }
 
-    public static String getWeatherDataByCoordinates(String Latitude, String Longitude) {
-        //https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}
-        String API_URL = "https://api.openweathermap.org/data/2.5/weather?lat="+ Latitude + "&lon=" + Longitude + "&appid=" + API_KEY;
-        return getWeather(API_URL);
+    interface OpenWeatherMapService {
+        @GET("weather")
+        Call<ResponseBody> getWeather(
+                @Query("q") String city,
+                @Query("lat") String lat,
+                @Query("lon") String lon,
+                @Query("appid") String apiKey
+        );
+    }
+}
+
+// Запрос по городу
+class CityWeatherRequest extends WeatherRequestHandler {
+    public void execute(String city, WeatherAPI.WeatherCallback callback) {
+        Call<ResponseBody> call = service.getWeather(city, null, null, API_KEY);
+        handleResponse(call, callback);
+    }
+}
+
+// Запрос по координатам
+class CoordinatesWeatherRequest extends WeatherRequestHandler {
+    public void execute(String lat, String lon, WeatherAPI.WeatherCallback callback) {
+        Call<ResponseBody> call = service.getWeather(null, lat, lon, API_KEY);
+        handleResponse(call, callback);
+    }
+}
+
+// Интерфейс и методы для работы с API
+public class WeatherAPI {
+    public interface WeatherCallback {
+        void onSuccess(String response);
+        void onFailure(Throwable t);
     }
 
+    public static void getWeatherDataByCity(String city, WeatherCallback callback) {
+        new CityWeatherRequest().execute(city, callback);
+    }
+
+    public static void getWeatherDataByCoordinates(String lat, String lon, WeatherCallback callback) {
+        new CoordinatesWeatherRequest().execute(lat, lon, callback);
+    }
 }
