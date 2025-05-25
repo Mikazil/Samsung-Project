@@ -12,6 +12,8 @@ import com.google.android.material.color.DynamicColors;
 
 
 public class MainActivity extends AppCompatActivity {
+    public String city;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
