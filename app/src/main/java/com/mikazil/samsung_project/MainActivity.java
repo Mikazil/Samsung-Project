@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupSearchView();
-        fetchWeatherData("Москва");
+        fetchWeatherData("Moscow");
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -80,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
 @SuppressLint("DefaultLocale")
 private void updateUI(WeatherData data) {
     binding.temperature.setText(String.format("%.1f°C", data.getTemperature()));
-    binding.feelsLike.setText(String.format("Feels: %.1f°C", data.getFeelsLike()));
+    binding.feelsLike.setText(String.format("По ощущениям: %.1f°C", data.getFeelsLike()));
     binding.humidity.setText(String.format("%d%%", data.getHumidity()));
     binding.windSpeed.setText(String.format("%.1f m/s", data.getWindSpeed()));
+    binding.pressureValue.setText(String.format("%.0f hPa", data.getPressure()));
 }
 }

@@ -48,5 +48,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.volley)
     implementation(libs.play.services.location)
+    implementation(libs.material.v1110)
 
 }

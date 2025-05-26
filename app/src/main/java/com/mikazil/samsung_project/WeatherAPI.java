@@ -106,10 +106,11 @@ public class WeatherAPI {
 
 
 class WeatherData {
-    private double temperature;
-    private double feelsLike;
+    private static double temperature;
+    private static double feelsLike;
     private int humidity;
     private double windSpeed;
+    private double pressure;
 
     public static WeatherData fromJson(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
@@ -117,9 +118,12 @@ class WeatherData {
         JSONObject wind = root.getJSONObject("wind");
 
         WeatherData data = new WeatherData();
-        data.temperature = main.getDouble("temp");
-        data.feelsLike = main.getDouble("feels_like");
+        double tempKelvin = main.getDouble("temp");
+        temperature = tempKelvin - 273.15;
+        double feelsLikeKelvin = main.getDouble("feels_like");
+        feelsLike = feelsLikeKelvin - 273.15;
         data.humidity = main.getInt("humidity");
+        data.pressure = main.getDouble("pressure");
         data.windSpeed = wind.getDouble("speed");
         return data;
     }
@@ -128,4 +132,5 @@ class WeatherData {
     public double getFeelsLike() { return feelsLike; }
     public int getHumidity() { return humidity; }
     public double getWindSpeed() { return windSpeed; }
+    public double getPressure() { return pressure; }
 }
