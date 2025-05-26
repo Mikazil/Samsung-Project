@@ -56,33 +56,42 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-            private void fetchWeatherData(String city) {
-                WeatherAPI.getWeatherDataByCity(city, new WeatherAPI.WeatherCallback() {
-                    @SuppressLint("DefaultLocale")
-                    @Override
-                    public void onSuccess(String response) {
-                        try {
-                            WeatherData data = WeatherData.fromJson(response);
+    private void fetchWeatherData(String city) {
+        WeatherAPI.getWeatherDataByCity(city, new WeatherAPI.WeatherCallback() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    WeatherData data = WeatherData.fromJson(response);
 
-                            runOnUiThread(() -> updateUI(data));
+                    runOnUiThread(() -> updateUI(data));
 
-                        } catch (JSONException e) {
-                            Log.e("TAG", "JSON parsing error", e);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Log.e("TAG", "API call failed", t);
-                    }
-                });
+                } catch (JSONException e) {
+                    Log.e("TAG", "JSON parsing error", e);
+                }
             }
-@SuppressLint("DefaultLocale")
-private void updateUI(WeatherData data) {
-    binding.temperature.setText(String.format("%.1f°C", data.getTemperature()));
-    binding.feelsLike.setText(String.format("По ощущениям: %.1f°C", data.getFeelsLike()));
-    binding.humidity.setText(String.format("%d%%", data.getHumidity()));
-    binding.windSpeed.setText(String.format("%.1f m/s", data.getWindSpeed()));
-    binding.pressureValue.setText(String.format("%.0f hPa", data.getPressure()));
-}
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e("TAG", "API call failed", t);
+            }
+        });
+    }
+
+    @SuppressLint("DefaultLocale")
+    private void updateUI(WeatherData data) {
+        binding.temperature.setText(String.format("%.1f°C", data.getTemperature()));
+        binding.feelsLike.setText(String.format("По ощущениям: %.1f°C", data.getFeelsLike()));
+        binding.humidity.setText(String.format("%d%%", data.getHumidity()));
+        binding.windSpeed.setText(String.format("%.1f m/s", data.getWindSpeed()));
+        binding.pressureValue.setText(String.format("%.0f hPa", data.getPressure()));
+        binding.weatherCondition.setText(getCloudinessDescription(data.getClouds()));
+    }
+
+    private String getCloudinessDescription(int cloudiness) {
+        if (cloudiness <= 10) return "Ясно ☀️";
+        else if (cloudiness <= 30) return "Малооблачно 🌤";
+        else if (cloudiness <= 70) return "Переменная облачность ⛅";
+        else return "Пасмурно ☁️";
+    }
 }

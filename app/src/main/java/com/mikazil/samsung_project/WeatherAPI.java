@@ -111,11 +111,13 @@ class WeatherData {
     private int humidity;
     private double windSpeed;
     private double pressure;
+    private int cloudiness;
 
     public static WeatherData fromJson(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
         JSONObject main = root.getJSONObject("main");
         JSONObject wind = root.getJSONObject("wind");
+        JSONObject clouds = root.getJSONObject("clouds");
 
         WeatherData data = new WeatherData();
         double tempKelvin = main.getDouble("temp");
@@ -125,12 +127,13 @@ class WeatherData {
         data.humidity = main.getInt("humidity");
         data.pressure = main.getDouble("pressure");
         data.windSpeed = wind.getDouble("speed");
+        data.cloudiness = clouds.getInt("all");
         return data;
     }
-
     public double getTemperature() { return temperature; }
     public double getFeelsLike() { return feelsLike; }
     public int getHumidity() { return humidity; }
     public double getWindSpeed() { return windSpeed; }
     public double getPressure() { return pressure; }
+    public int getClouds() { return cloudiness; }
 }
