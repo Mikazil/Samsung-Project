@@ -1,6 +1,10 @@
 package com.mikazil.samsung_project;
 
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -98,4 +102,30 @@ public class WeatherAPI {
     public static void getWeatherDataByCoordinates(String lat, String lon, WeatherCallback callback) {
         new CoordinatesWeatherRequest().execute(lat, lon, callback);
     }
+}
+
+
+class WeatherData {
+    private double temperature;
+    private double feelsLike;
+    private int humidity;
+    private double windSpeed;
+
+    public static WeatherData fromJson(String json) throws JSONException {
+        JSONObject root = new JSONObject(json);
+        JSONObject main = root.getJSONObject("main");
+        JSONObject wind = root.getJSONObject("wind");
+
+        WeatherData data = new WeatherData();
+        data.temperature = main.getDouble("temp");
+        data.feelsLike = main.getDouble("feels_like");
+        data.humidity = main.getInt("humidity");
+        data.windSpeed = wind.getDouble("speed");
+        return data;
+    }
+
+    public double getTemperature() { return temperature; }
+    public double getFeelsLike() { return feelsLike; }
+    public int getHumidity() { return humidity; }
+    public double getWindSpeed() { return windSpeed; }
 }

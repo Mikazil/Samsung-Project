@@ -1,8 +1,8 @@
 package com.mikazil.samsung_project;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,11 +10,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.mikazil.samsung_project.WeatherAPI;
 import com.google.android.material.color.DynamicColors;
-
 import com.mikazil.samsung_project.databinding.ActivityMainBinding;
 
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -24,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(R.layout.activity_main);
+        setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -33,22 +31,36 @@ public class MainActivity extends AppCompatActivity {
         });
 
         DynamicColors.applyToActivityIfAvailable(this);
-        WeatherAPI.getWeatherDataByCity("London", new WeatherAPI.WeatherCallback() {
+
+
+        DynamicColors.applyToActivityIfAvailable(this);
+        fetchWeatherData("London");
+    }
+
+    private void fetchWeatherData(String city) {
+        WeatherAPI.getWeatherDataByCity(city, new WeatherAPI.WeatherCallback() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onSuccess(String response) {
-                // Обработка ответа
-                Log.d("TAG", response);
-                binding.feelsLike.setText(response);
+                try {
+                    WeatherData data = WeatherData.fromJson(response);
+
+                    runOnUiThread(() -> {
+                        binding.temperature.setText(String.format("%.1f°C", data.getTemperature()));
+                        binding.feelsLike.setText(String.format("Feels like: %.1f°C", data.getFeelsLike()));
+                        binding.humidity.setText(String.format("Humidity: %d%%", data.getHumidity()));
+                        binding.windSpeed.setText(String.format("Wind: %.1f m/s", data.getWindSpeed()));
+                    });
+
+                } catch (JSONException e) {
+                    Log.e("TAG", "JSON parsing error", e);
+                }
             }
 
             @Override
             public void onFailure(Throwable t) {
-                // Обработка ошибки
-                Log.d("TAG", t.toString());
+                Log.e("TAG", "API call failed", t);
             }
         });
-
-
     }
-
 }
