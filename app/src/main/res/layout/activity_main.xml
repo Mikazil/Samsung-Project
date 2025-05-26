@@ -8,12 +8,12 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <com.google.android.material.search.SearchBar
-        android:id="@+id/search_bar"
+    <SearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_city"
-        android:text="Москва"
+        android:queryHint="Введите город"
+        app:iconifiedbyDefault="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/weatherCondition"/>
 
@@ -27,7 +27,7 @@
 
         android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar"/>
+        app:layout_constraintTop_toBottomOf="@id/searchView"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/temperature"

@@ -3,6 +3,7 @@ package com.mikazil.samsung_project;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.SearchView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setupSearchView();
+        fetchWeatherData("Москва");
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -32,35 +35,53 @@ public class MainActivity extends AppCompatActivity {
 
         DynamicColors.applyToActivityIfAvailable(this);
 
-
+        // реализовать города
         DynamicColors.applyToActivityIfAvailable(this);
-        fetchWeatherData("London");
     }
 
-    private void fetchWeatherData(String city) {
-        WeatherAPI.getWeatherDataByCity(city, new WeatherAPI.WeatherCallback() {
-            @SuppressLint("DefaultLocale")
+    private void setupSearchView() {
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onSuccess(String response) {
-                try {
-                    WeatherData data = WeatherData.fromJson(response);
-
-                    runOnUiThread(() -> {
-                        binding.temperature.setText(String.format("%.1f°C", data.getTemperature()));
-                        binding.feelsLike.setText(String.format("Feels like: %.1f°C", data.getFeelsLike()));
-                        binding.humidity.setText(String.format("Humidity: %d%%", data.getHumidity()));
-                        binding.windSpeed.setText(String.format("Wind: %.1f m/s", data.getWindSpeed()));
-                    });
-
-                } catch (JSONException e) {
-                    Log.e("TAG", "JSON parsing error", e);
-                }
+            public boolean onQueryTextSubmit(String query) {
+                // Вызывается при нажатии Enter или иконки поиска
+                fetchWeatherData(query);
+                binding.searchView.clearFocus(); // Скрыть клавиатуру
+                return true;
             }
 
             @Override
-            public void onFailure(Throwable t) {
-                Log.e("TAG", "API call failed", t);
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
     }
+
+            private void fetchWeatherData(String city) {
+                WeatherAPI.getWeatherDataByCity(city, new WeatherAPI.WeatherCallback() {
+                    @SuppressLint("DefaultLocale")
+                    @Override
+                    public void onSuccess(String response) {
+                        try {
+                            WeatherData data = WeatherData.fromJson(response);
+
+                            runOnUiThread(() -> updateUI(data));
+
+                        } catch (JSONException e) {
+                            Log.e("TAG", "JSON parsing error", e);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Log.e("TAG", "API call failed", t);
+                    }
+                });
+            }
+@SuppressLint("DefaultLocale")
+private void updateUI(WeatherData data) {
+    binding.temperature.setText(String.format("%.1f°C", data.getTemperature()));
+    binding.feelsLike.setText(String.format("Feels: %.1f°C", data.getFeelsLike()));
+    binding.humidity.setText(String.format("%d%%", data.getHumidity()));
+    binding.windSpeed.setText(String.format("%.1f m/s", data.getWindSpeed()));
+}
 }
