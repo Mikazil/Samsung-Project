@@ -40,12 +40,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupSearchView() {
-        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Вызывается при нажатии Enter или иконки поиска
                 fetchWeatherData(query);
-                binding.searchView.clearFocus(); // Скрыть клавиатуру
+                binding.searchView.clearFocus();
                 return true;
             }
 
