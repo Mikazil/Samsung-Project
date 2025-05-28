@@ -1,16 +1,9 @@
 package com.mikazil.samsung_project;
 
-import static com.google.android.material.internal.ViewUtils.hideKeyboard;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,40 +35,26 @@ public class MainActivity extends AppCompatActivity {
 
         DynamicColors.applyToActivityIfAvailable(this);
 
+        // реализовать города
         DynamicColors.applyToActivityIfAvailable(this);
     }
 
-//    private void setupSearchView() {
-//        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                // Вызывается при нажатии Enter или иконки поиска
-//                fetchWeatherData(query);
-//                binding.searchView.clearFocus(); // Скрыть клавиатуру
-//                return true;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
-//    }
-private void setupSearchView() {
-    binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            fetchWeatherData(query);
-            binding.searchView.clearFocus();
-            return true;
-        }
+    private void setupSearchView() {
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Вызывается при нажатии Enter или иконки поиска
+                fetchWeatherData(query);
+                binding.searchView.clearFocus(); // Скрыть клавиатуру
+                return true;
+            }
 
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            return false;
-        }
-    });
-}
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
 
     private void fetchWeatherData(String city) {
         WeatherAPI.getWeatherDataByCity(city, new WeatherAPI.WeatherCallback() {
@@ -105,7 +84,7 @@ private void setupSearchView() {
         binding.feelsLike.setText(String.format("По ощущениям: %.1f°C", data.getFeelsLike()));
         binding.humidity.setText(String.format("%d%%", data.getHumidity()));
         binding.windSpeed.setText(String.format("%.1f m/s", data.getWindSpeed()));
-        //binding.pressureValue.setText(String.format("%.0f hPa", data.getPressure()));
+        binding.pressureValue.setText(String.format("%.0f hPa", data.getPressure()));
         binding.weatherCondition.setText(getCloudinessDescription(data.getClouds()));
     }
 
