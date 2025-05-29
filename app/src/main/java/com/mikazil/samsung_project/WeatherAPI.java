@@ -1,7 +1,12 @@
 package com.mikazil.samsung_project;
 
 import android.util.Log;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.mikazil.samsung_project.OpenWeatherMapService;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,7 +65,7 @@ abstract class WeatherRequestHandler {
 // Запрос по городу
 class CityWeatherRequest extends WeatherRequestHandler {
     public void execute(String city, WeatherAPI.WeatherCallback callback) {
-        Call<ResponseBody> call = service.getWeather(city, null, null, API_KEY);
+        Call<ResponseBody> call = service.getWeather(city, null, null, API_KEY, "metric", "ru");
         handleResponse(call, callback);
     }
 }
@@ -68,7 +73,7 @@ class CityWeatherRequest extends WeatherRequestHandler {
 // Запрос по координатам
 class CoordinatesWeatherRequest extends WeatherRequestHandler {
     public void execute(String lat, String lon, WeatherAPI.WeatherCallback callback) {
-        Call<ResponseBody> call = service.getWeather(null, lat, lon, API_KEY);
+        Call<ResponseBody> call = service.getWeather(null, lat, lon, API_KEY, "metric", "ru");
         handleResponse(call, callback);
     }
 }
@@ -96,4 +101,3 @@ public class WeatherAPI {
         new CoordinatesWeatherRequest().execute(lat, lon, callback);
     }
 }
-

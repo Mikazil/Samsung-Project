@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
+    android:paddingVertical="48dp"
+    android:paddingHorizontal="24dp"
     android:background="@drawable/bg_gradient_sky">
 
     <!-- Поиск с полупрозрачностью -->
@@ -56,14 +57,17 @@
         app:layout_constraintTop_toBottomOf="@id/location"/>
 
     <!-- Основная погодная информация -->
-    <ImageView
+    <TextView
         android:id="@+id/weatherIcon"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:textAlignment="center"
+        android:textSize="120dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/currentDate"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:text="☁️"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/temperature"
@@ -78,7 +82,7 @@
         android:shadowRadius="4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/weatherIcon"/>
+        app:layout_constraintTop_toBottomOf="@id/weatherIcon"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/weatherCondition"
@@ -104,7 +108,7 @@
 
     <!-- Блок минимальной/максимальной температуры -->
     <LinearLayout
-        android:id="@+id/minMaxTempRow"
+        android:id="@+id/minmaxtemps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -115,40 +119,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/feelsLike">
 
-        <ImageView
-            android:layout_width="20dp"
-            android:src="@drawable/tempm"
-            android:tint="?attr/colorError"
-            android:layout_height="20dp"
-            android:layout_marginEnd="4dp"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tempMin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="18°"
+            android:textColor="#FFFFFF"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_marginHorizontal="12dp"
+            android:background="#80FFFFFF" />
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tempMax"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="28°"
-            android:textColor="?attr/colorError"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="16dp"
-            android:layout_marginHorizontal="12dp"
-            android:background="#80FFFFFF" />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/trace_2"
-            android:layout_marginEnd="4dp"
-            app:tint="#00BBFF" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tempMin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="18°"
-            android:textColor="#00C5FF"
+            android:textColor="#FFFFFF"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
     </LinearLayout>
 
@@ -160,7 +151,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minMaxTempRow">
+        app:layout_constraintTop_toBottomOf="@id/minmaxtemps">
 
         <!-- Блок прогноза погоды -->
         <LinearLayout
