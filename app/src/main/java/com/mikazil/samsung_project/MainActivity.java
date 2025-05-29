@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateHourlyForecast(List<HourlyForecast> forecasts) {
-        LinearLayout container = findViewById(R.id.weatherForecast);
+          LinearLayout container = findViewById(R.id.weatherForecast);
 
         for (int i = 0; i < container.getChildCount(); i++) {
             View child = container.getChildAt(i);

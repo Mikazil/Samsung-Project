@@ -4,11 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingVertical="48dp"
-    android:paddingHorizontal="24dp"
-    android:background="@drawable/bg_gradient_sky">
+    android:background="@drawable/bg_gradient_sky"
+    android:paddingVertical="24dp"
+    android:paddingHorizontal="16dp">
 
-    <!-- Поиск с полупрозрачностью -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/searchCard"
         android:layout_width="0dp"
@@ -20,7 +19,9 @@
         app:cardBackgroundColor="#20FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.95"
+        android:layout_marginTop="48dp">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchView"
@@ -31,38 +32,39 @@
             app:iconifiedByDefault="false" />
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Заголовок с городом -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/location"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Москва, Россия"
         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
         android:textColor="#FFFFFF"
+        android:ellipsize="end"
+        android:maxLines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchCard"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintWidth_percent="0.95"
+        android:layout_marginTop="12dp"/>
 
-    <!-- Текущая дата -->
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/currentDate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="29 мая, четверг"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/location"/>
+        app:layout_constraintTop_toBottomOf="@id/location"
+        app:layout_constraintWidth_percent="0.95"/>
 
-    <!-- Основная погодная информация -->
     <TextView
         android:id="@+id/weatherIcon"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textSize="120sp"
+        android:textSize="80sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/currentDate"
@@ -75,6 +77,7 @@
         android:layout_height="wrap_content"
         android:text="19°"
         android:textAppearance="@style/TextAppearance.Material3.DisplayLarge"
+        android:textSize="56sp"
         android:textColor="#FFFFFF"
         android:shadowColor="#40000000"
         android:shadowDx="2"
@@ -86,33 +89,39 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/weatherCondition"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Солнечно"
         android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+        android:textSize="20sp"
         android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:maxLines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/temperature"/>
+        app:layout_constraintTop_toBottomOf="@id/temperature"
+        app:layout_constraintWidth_percent="0.95"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/feelsLike"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Ощущается как 25°C"
         android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+        android:textSize="16sp"
         android:textColor="#FFFFFF"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weatherCondition"/>
+        app:layout_constraintTop_toBottomOf="@id/weatherCondition"
+        app:layout_constraintWidth_percent="0.95"/>
 
-    <!-- Блок минимальной/максимальной температуры -->
     <LinearLayout
         android:id="@+id/minmaxtemps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:paddingVertical="8dp"
         android:paddingHorizontal="24dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -125,6 +134,7 @@
             android:layout_height="wrap_content"
             android:text="18°"
             android:textColor="#FFFFFF"
+            android:textSize="18sp"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
         <View
@@ -133,17 +143,16 @@
             android:layout_marginHorizontal="12dp"
             android:background="#80FFFFFF" />
 
-
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tempMax"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="28°"
             android:textColor="#FFFFFF"
+            android:textSize="18sp"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
     </LinearLayout>
 
-    <!-- Группировка прогноза и карточек внизу экрана -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -151,9 +160,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minmaxtemps">
+        app:layout_constraintTop_toBottomOf="@id/minmaxtemps"
+        app:layout_constraintWidth_percent="0.95">
 
-        <!-- Блок прогноза погоды -->
         <LinearLayout
             android:id="@+id/weatherForecast"
             android:layout_width="match_parent"
@@ -162,7 +171,6 @@
             android:gravity="center"
             android:layout_marginBottom="16dp">
 
-            <!-- Прогноз на сегодня -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -186,11 +194,12 @@
                         android:layout_height="wrap_content"
                         android:text="Сейчас"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"/>
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_marginTop="4dp"
                         app:tint="#FFFFFF"
                         android:src="@drawable/ic_sunny"/>
@@ -201,11 +210,11 @@
                         android:layout_marginTop="4dp"
                         android:text="19°"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Прогноз на 3 часа -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -229,11 +238,12 @@
                         android:layout_height="wrap_content"
                         android:text="15:00"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"/>
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_marginTop="4dp"
                         app:tint="#FFFFFF"
                         android:src="@drawable/ic_sunny"/>
@@ -244,11 +254,11 @@
                         android:layout_marginTop="4dp"
                         android:text="20°"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Прогноз на 6 часов -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -272,11 +282,12 @@
                         android:layout_height="wrap_content"
                         android:text="18:00"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"/>
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_marginTop="4dp"
                         app:tint="#FFFFFF"
                         android:src="@drawable/ic_partly_cloudy"/>
@@ -287,11 +298,11 @@
                         android:layout_marginTop="4dp"
                         android:text="18°"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Прогноз на 9 часов -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -315,11 +326,12 @@
                         android:layout_height="wrap_content"
                         android:text="21:00"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"/>
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:layout_marginTop="4dp"
                         app:tint="#FFFFFF"
                         android:src="@drawable/ic_night"/>
@@ -330,12 +342,12 @@
                         android:layout_marginTop="4dp"
                         android:text="16°"
                         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- Карточки с деталями погоды -->
         <LinearLayout
             android:id="@+id/cardsRow"
             android:layout_width="match_parent"
@@ -344,7 +356,6 @@
             android:gravity="center"
             android:baselineAligned="false">
 
-            <!-- Карточка влажности -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -359,12 +370,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:src="@drawable/water_drop_24px"
                         app:tint="#FFFFFF" />
 
@@ -374,6 +385,7 @@
                         android:text="Влажность"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:textColor="#FFFFFF"
+                        android:textSize="12sp"
                         android:layout_marginTop="8dp"/>
 
                     <com.google.android.material.textview.MaterialTextView
@@ -384,11 +396,11 @@
                         android:gravity="center"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                         android:textColor="#FFFFFF"
+                        android:textSize="18sp"
                         android:layout_marginTop="4dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Карточка ветра -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -404,12 +416,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:src="@drawable/wind_icon"
                         app:tint="#FFFFFF"/>
 
@@ -419,6 +431,7 @@
                         android:text="Ветер"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:textColor="#FFFFFF"
+                        android:textSize="12sp"
                         android:layout_marginTop="8dp"/>
 
                     <com.google.android.material.textview.MaterialTextView
@@ -429,11 +442,11 @@
                         android:gravity="center"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                         android:textColor="#FFFFFF"
+                        android:textSize="18sp"
                         android:layout_marginTop="4dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Карточка давления -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -448,12 +461,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp"
+                    android:padding="12dp"
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:src="@drawable/compress_24px"
                         app:tint="#FFFFFF"/>
 
@@ -463,6 +476,7 @@
                         android:text="Давление"
                         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
                         android:textColor="#FFFFFF"
+                        android:textSize="12sp"
                         android:layout_marginTop="8dp"/>
 
                     <com.google.android.material.textview.MaterialTextView
@@ -473,6 +487,7 @@
                         android:gravity="center"
                         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                         android:textColor="#FFFFFF"
+                        android:textSize="18sp"
                         android:layout_marginTop="4dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
