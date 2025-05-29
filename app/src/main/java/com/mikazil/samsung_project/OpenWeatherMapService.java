@@ -12,7 +12,9 @@ public interface OpenWeatherMapService {
             @Query("q") String city,
             @Query("lat") String lat,
             @Query("lon") String lon,
-            @Query("appid") String apiKey
+            @Query("appid") String apiKey,
+            @Query("units") String units,
+            @Query("lang") String lang
     );
 
     // Метод для прогноза погоды
