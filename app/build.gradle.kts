@@ -50,5 +50,8 @@ dependencies {
     implementation(libs.volley)
     implementation(libs.play.services.location)
     implementation(libs.material.v1110)
+    implementation(libs.retrofit.v290)
+    implementation(libs.converter.gson.v290)
+    implementation(libs.json)
 
 }
