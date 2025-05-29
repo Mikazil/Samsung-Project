@@ -125,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
         binding.temperature.setText(String.format("%.1f°C", data.getTemperature()));
         binding.feelsLike.setText(String.format("По ощущениям: %.1f°C", data.getFeelsLike()));
         binding.humidity.setText(String.format("%d%%", data.getHumidity()));
-        binding.windSpeed.setText(String.format("%.1f m/s", data.getWindSpeed()));
-        binding.pressureValue.setText(String.format("%.0f hPa", data.getPressure()));
+        binding.windSpeed.setText(String.format("%.1f м/с", data.getWindSpeed()));
+        binding.pressureValue.setText(String.format("%.0f гПа", data.getPressure()));
         //binding.weatherCondition.setText(getCloudinessDescription(data.getClouds()));
         binding.weatherCondition.setText(data.getWeatherDescription().substring(0, 1).toUpperCase() + data.getWeatherDescription().substring(1));
         binding.tempMin.setText(String.format("%.1f°C", data.getMinTemp()));
