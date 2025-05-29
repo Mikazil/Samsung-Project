@@ -54,4 +54,8 @@ dependencies {
     implementation(libs.converter.gson.v290)
     implementation(libs.json)
     implementation(libs.play.services.location.v2101)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.osmdroid.android)
+    implementation(libs.osmdroid.wms)
 }

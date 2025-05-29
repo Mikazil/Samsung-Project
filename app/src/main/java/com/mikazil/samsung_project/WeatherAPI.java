@@ -1,12 +1,6 @@
 package com.mikazil.samsung_project;
 
 import android.util.Log;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.mikazil.samsung_project.OpenWeatherMapService;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.IOException;
 
 abstract class WeatherRequestHandler {
-    protected static final String API_KEY = "b37d8af2cceace36578fa5899ad6a9f8";
+    protected static final String API_KEY = "a753173d5d3360f2b0bc53817b17d4e9";
     protected static final String BASE_URL = "https://api.openweathermap.org/data/2.5/";
     protected static final String LOG_TAG = "WeatherAPI";
 
@@ -27,11 +21,9 @@ abstract class WeatherRequestHandler {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         service = retrofit.create(OpenWeatherMapService.class);
     }
 
-    // Обработчик ответов
     protected void handleResponse(Call<ResponseBody> call, WeatherAPI.WeatherCallback callback) {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -62,7 +54,7 @@ abstract class WeatherRequestHandler {
     }
 }
 
-// Запрос по городу
+// Запрос текущей погоды по городу
 class CityWeatherRequest extends WeatherRequestHandler {
     public void execute(String city, WeatherAPI.WeatherCallback callback) {
         Call<ResponseBody> call = service.getWeather(city, null, null, API_KEY, "metric", "ru");
@@ -70,7 +62,7 @@ class CityWeatherRequest extends WeatherRequestHandler {
     }
 }
 
-// Запрос по координатам
+// Запрос текущей погоды по координатам
 class CoordinatesWeatherRequest extends WeatherRequestHandler {
     public void execute(String lat, String lon, WeatherAPI.WeatherCallback callback) {
         Call<ResponseBody> call = service.getWeather(null, lat, lon, API_KEY, "metric", "ru");
@@ -78,7 +70,30 @@ class CoordinatesWeatherRequest extends WeatherRequestHandler {
     }
 }
 
-// Интерфейс и методы для работы с API
+// Запрос прогноза по городу
+class CityForecastRequest extends WeatherRequestHandler {
+    public void execute(String city, WeatherAPI.WeatherCallback callback) {
+        Call<ResponseBody> call = service.getForecast(city, null, null, API_KEY, "metric", "ru");
+        handleResponse(call, callback);
+    }
+}
+
+// Запрос прогноза по координатам
+class CoordinatesForecastRequest extends WeatherRequestHandler {
+    public void execute(String lat, String lon, WeatherAPI.WeatherCallback callback) {
+        Call<ResponseBody> call = service.getForecast(null, lat, lon, API_KEY, "metric", "ru");
+        handleResponse(call, callback);
+    }
+}
+
+// Запрос по ID города
+class CityIdWeatherRequest extends WeatherRequestHandler {
+    public void execute(String cityId, WeatherAPI.WeatherCallback callback) {
+        Call<ResponseBody> call = service.getWeatherById(cityId, API_KEY, "metric", "ru");
+        handleResponse(call, callback);
+    }
+}
+
 public class WeatherAPI {
     public interface WeatherCallback {
         void onSuccess(String response);
@@ -99,5 +114,9 @@ public class WeatherAPI {
 
     public static void getWeatherDataByCoordinates(String lat, String lon, WeatherCallback callback) {
         new CoordinatesWeatherRequest().execute(lat, lon, callback);
+    }
+
+    public static void getWeatherDataById(String cityId, WeatherCallback callback) {
+        new CityIdWeatherRequest().execute(cityId, callback);
     }
 }

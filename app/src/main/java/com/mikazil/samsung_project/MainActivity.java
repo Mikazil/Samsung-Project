@@ -47,27 +47,54 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        // Инициализация сервиса геолокации
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        // Получение флага из интента
-        if (getIntent() != null) {
-            useGeolocation = getIntent().getBooleanExtra("use_geolocation", false);
+        Intent intent = getIntent();
+        useGeolocation = intent.getBooleanExtra("use_geolocation", false);
+        String city = intent.getStringExtra("city");
+        String cityId = intent.getStringExtra("city_id");
+        if (cityId != null && !cityId.isEmpty()) {
+            fetchWeatherDataById(cityId);
+        } else if (useGeolocation) {
+            requestLocationPermission();
+        } else if (city != null && !city.isEmpty()) {
+            fetchWeatherData(city);
+        } else {
+            fetchWeatherData("Moscow");
         }
-
         setupSearchView();
         setupBackButton();
 
-        // Определение источника данных для погоды
         if (useGeolocation) {
             requestLocationPermission();
+        } else if (city != null && !city.isEmpty()) {
+            fetchWeatherData(city);
         } else {
-            // По умолчанию показываем Москву
             fetchWeatherData("Moscow");
         }
 
         DynamicColors.applyToActivityIfAvailable(this);
+    }
+    private void fetchWeatherDataById(String cityId) {
+        WeatherAPI.getWeatherDataById(cityId, new WeatherAPI.WeatherCallback() {
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    WeatherData data = WeatherData.fromJson(response);
+                    runOnUiThread(() -> updateUI(data));
+                    fetchForecastData(data.getCityName());
+                } catch (JSONException e) {
+                    Log.e("TAG", "JSON parsing error", e);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Log.e("TAG", "API call failed", t);
+                runOnUiThread(() ->
+                        Toast.makeText(MainActivity.this, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
+                );
+            }
+        });
     }
 
     private void setupSearchView() {
