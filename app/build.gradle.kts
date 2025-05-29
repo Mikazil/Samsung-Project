@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.coordinatorlayout)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.google.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -3,240 +3,299 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
-<!--    android:background="@color/weather_background">-->
+    android:padding="24dp"
+    android:background="@drawable/bg_gradient_sky">
+
+    <!-- Поиск с полупрозрачностью -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/searchCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#80FFFFFF"
+        app:strokeWidth="1dp"
+        app:cardBackgroundColor="#20FFFFFF"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:queryHint="Поиск города..."
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        app:queryHint="Введите город"
         app:iconifiedByDefault="false" />
+</com.google.android.material.card.MaterialCardView>
+
+    <!-- Заголовок с городом и датой -->
+<com.google.android.material.textview.MaterialTextView
+android:id="@+id/location"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Москва, Россия"
+android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+android:textColor="#FFFFFF"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/searchCard"
+android:layout_marginTop="16dp"/>
+
+<com.google.android.material.textview.MaterialTextView
+android:id="@+id/currentDate"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="29 мая, четверг"
+android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+android:textColor="#FFFFFF"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/location"/>
 
     <!-- Основная погодная информация -->
-    <ImageView
-        android:id="@+id/weatherIcon"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchView"/>
-<!--    android:contentDescription="@string/weather_icon"-->
-<!--        app:srcCompat="@drawable/ic_sunny" />-->
+<ImageView
+android:id="@+id/weatherIcon"
+android:layout_width="150dp"
+android:layout_height="150dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/currentDate"
+android:layout_marginTop="8dp" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/weatherCondition"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="?attr/colorOnSurface"
-        android:text="Солнечно"
-        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weatherIcon" />
+<com.google.android.material.textview.MaterialTextView
+android:id="@+id/temperature"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="19°"
+android:textAppearance="@style/TextAppearance.Material3.DisplayLarge"
+android:textColor="#FFFFFF"
+android:shadowColor="#40000000"
+android:shadowDx="2"
+android:shadowDy="2"
+android:shadowRadius="4"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/weatherIcon"/>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/temperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="19°"
-        android:textColor="?attr/colorPrimary"
-        android:textAppearance="@style/TextAppearance.Material3.DisplayLarge"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/weatherCondition" />
+<com.google.android.material.textview.MaterialTextView
+android:id="@+id/weatherCondition"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Солнечно"
+android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+android:textColor="#FFFFFF"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/temperature"/>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/feelsLike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Ощущается как 25°C"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/temperature" />
+<com.google.android.material.textview.MaterialTextView
+android:id="@+id/feelsLike"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Ощущается как 25°C"
+android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+android:textColor="#FFFFFF"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/weatherCondition"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/feelsLike">
+    <!-- Мини-карточка температур с полупрозрачностью -->
+<LinearLayout
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:layout_marginTop="16dp"
+    android:paddingVertical="8dp"
+    android:paddingHorizontal="24dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/feelsLike">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tempMax"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="28°"
-            android:textColor="?attr/colorError"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            android:layout_marginEnd="8dp"/>
-<!--            android:drawableTop="@drawable/ic_arrow_up" />-->
+<ImageView
+    android:layout_width="20dp"
+    android:src="@drawable/tempm"
+    android:tint="?attr/colorError"
+    android:layout_height="20dp"
+    android:layout_marginEnd="4dp"/>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="16dp"
-            android:layout_marginHorizontal="8dp"
-            android:background="?attr/colorOutline" />
+<com.google.android.material.textview.MaterialTextView
+    android:id="@+id/tempMax"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="28°"
+    android:textColor="?attr/colorError"
+    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tempMin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="18°"
-            android:textColor="?attr/colorPrimary"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            android:layout_marginStart="8dp"/>
-<!--            android:drawableTop="@drawable/ic_arrow_down" />-->
+<View
+    android:layout_width="1dp"
+    android:layout_height="16dp"
+    android:layout_marginHorizontal="12dp"
+    android:background="#80FFFFFF" />
+
+<ImageView
+android:layout_width="20dp"
+android:layout_height="20dp"
+android:src="@drawable/trace_2"
+    android:layout_marginEnd="4dp"
+    app:tint="#00BBFF" />
+
+<com.google.android.material.textview.MaterialTextView
+android:id="@+id/tempMin"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="18°"
+android:textColor="#00C5FF"
+android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
     </LinearLayout>
 
-    <!-- Единая строка карточек -->
+<LinearLayout
+android:id="@+id/cardsRow"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_marginTop="32dp"
+android:orientation="horizontal"
+android:gravity="center"
+android:baselineAligned="false"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/tempMax">
+
+<!-- Карточка влажности -->
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#80FFFFFF"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="#20FFFFFF">
     <LinearLayout
-        android:id="@+id/cardsRow"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:baselineAligned="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tempMax">
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
 
-        <!-- Карточка влажности -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:strokeColor="?attr/colorOutline"
-            app:strokeWidth="1dp">
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/water_drop_24px"
+            app:tint="#FFFFFF" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Влажность"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+            android:textColor="#FFFFFF"
+        android:layout_marginTop="8dp"/>
 
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/water_drop_24px"
-                    app:tint="?attr/colorPrimary" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Влажность"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                    android:layout_marginTop="8dp"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/humidity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="65%"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Карточка ветра -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:strokeColor="?attr/colorOutline"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/wind_icon"
-                    app:tint="?attr/colorPrimary"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ветер"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                    android:layout_marginTop="8dp"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/windSpeed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3.5 м/с"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Карточка давления -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:strokeColor="?attr/colorOutline"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/compress_24px"
-                    app:tint="?attr/colorPrimary"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Давление"
-                    android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
-                    android:layout_marginTop="8dp"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/pressureValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1013 hPa"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-                    android:layout_marginTop="4dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="65%"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="4dp"/>
     </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<!-- Карточка ветра -->
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:layout_marginEnd="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#80FFFFFF"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="#20FFFFFF"> <!-- 12.5% прозрачности -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/wind_icon"
+            app:tint="#FFFFFF"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ветер"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+            android:textColor="#FFFFFF"
+        android:layout_marginTop="8dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/windSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3.5 м/с"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="#FFFFFF"
+        android:layout_marginTop="4dp"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+<!-- Карточка давления -->
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#80FFFFFF"
+    app:strokeWidth="1dp"
+    app:cardBackgroundColor="#20FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/compress_24px"
+            app:tint="#FFFFFF"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Давление"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+            android:textColor="#FFFFFF"
+        android:layout_marginTop="8dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/pressureValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1013 hPa"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:textColor="#FFFFFF"
+        android:layout_marginTop="4dp"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+</LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
