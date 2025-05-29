@@ -53,5 +53,5 @@ dependencies {
     implementation(libs.retrofit.v290)
     implementation(libs.converter.gson.v290)
     implementation(libs.json)
-
+    implementation(libs.play.services.location.v2101)
 }
