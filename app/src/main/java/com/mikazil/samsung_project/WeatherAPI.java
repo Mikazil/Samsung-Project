@@ -119,6 +119,8 @@ class WeatherData {
     private String weatherDescription;
     private String iconCode;
     private String cityName;
+    private int timezone;
+    private long timestamp;
 
     public static WeatherData fromJson(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
@@ -137,6 +139,8 @@ class WeatherData {
         data.windSpeed = wind.getDouble("speed");
         data.cloudiness = clouds.getInt("all");
         data.cityName = root.getString("name");
+        data.timestamp = root.getLong("dt") * 1000;
+        data.timezone = root.getInt("timezone");
 
         if (weatherArray.length() > 0) {
             JSONObject weather = weatherArray.getJSONObject(0);
@@ -160,5 +164,7 @@ class WeatherData {
     public int getClouds() { return cloudiness; }
     public String getWeatherDescription() { return weatherDescription; }
     public String getIconCode() { return iconCode; }
-    public String getCityName() {return cityName; }
+    public String getCityName() { return cityName; }
+    public long getTimestamp() { return timestamp; }
+    public int getTimezone(){ return timezone; }
 }

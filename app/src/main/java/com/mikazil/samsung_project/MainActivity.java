@@ -15,6 +15,10 @@ import com.google.android.material.color.DynamicColors;
 import com.mikazil.samsung_project.databinding.ActivityMainBinding;
 
 import org.json.JSONException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         binding.tempMax.setText(String.format("%.1f°C", data.getMaxTemp()));
         binding.weatherIcon.setText(getWeatherEmoji(data.getIconCode()));
         binding.location.setText(data.getCityName());
+        binding.currentDate.setText(formatDate(data.getTimestamp(), data.getTimezone()));
     }
 
     private String getWeatherEmoji(String iconCode) {
@@ -102,6 +107,19 @@ public class MainActivity extends AppCompatActivity {
             case "13d": case "13n": return "❄️"; // Снег
             case "50d": case "50n": return "🌫️"; // Туман
             default: return "❓";
+        }
+    }
+
+    private String formatDate(long timestamp, int timezoneOffset) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM, EEEE", new Locale("ru"));
+            TimeZone timeZone = TimeZone.getTimeZone("GMT");
+            timeZone.setRawOffset(timezoneOffset * 1000);
+            dateFormat.setTimeZone(timeZone);
+            return dateFormat.format(new Date(timestamp));
+        } catch (Exception e) {
+            Log.e("DateFormat", "Error formatting date with timezone", e);
+            return "";
         }
     }
 }
