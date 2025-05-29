@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "SetTextI18n"})
     private void updateUI(WeatherData data) {
         binding.temperature.setText(String.format("%.1f°C", data.getTemperature()));
         binding.feelsLike.setText(String.format("По ощущениям: %.1f°C", data.getFeelsLike()));
@@ -80,10 +80,11 @@ public class MainActivity extends AppCompatActivity {
         binding.windSpeed.setText(String.format("%.1f m/s", data.getWindSpeed()));
         binding.pressureValue.setText(String.format("%.0f hPa", data.getPressure()));
         //binding.weatherCondition.setText(getCloudinessDescription(data.getClouds()));
-        binding.weatherCondition.setText(data.getWeatherDescription());
+        binding.weatherCondition.setText(data.getWeatherDescription().substring(0, 1).toUpperCase() + data.getWeatherDescription().substring(1));
         binding.tempMin.setText(String.format("%.1f°C", data.getMinTemp()));
         binding.tempMax.setText(String.format("%.1f°C", data.getMaxTemp()));
         binding.weatherIcon.setText(getWeatherEmoji(data.getIconCode()));
+        binding.location.setText(data.getCityName());
     }
 
     private String getWeatherEmoji(String iconCode) {
