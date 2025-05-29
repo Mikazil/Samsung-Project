@@ -5,8 +5,8 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
-interface OpenWeatherMapService {
-    // Существующий метод для текущей погоды
+public interface OpenWeatherMapService {
+    // Метод для текущей погоды
     @GET("weather")
     Call<ResponseBody> getWeather(
             @Query("q") String city,
@@ -15,7 +15,7 @@ interface OpenWeatherMapService {
             @Query("appid") String apiKey
     );
 
-    // Новый метод для прогноза погоды
+    // Метод для прогноза погоды
     @GET("forecast")
     Call<ResponseBody> getForecast(
             @Query("q") String city,

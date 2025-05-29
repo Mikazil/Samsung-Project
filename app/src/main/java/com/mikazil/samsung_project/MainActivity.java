@@ -18,9 +18,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.DynamicColors;
 import com.mikazil.samsung_project.databinding.ActivityMainBinding;
-
+import com.mikazil.samsung_project.WeatherData;
+import com.mikazil.samsung_project.HourlyForecast;
 import org.json.JSONException;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
