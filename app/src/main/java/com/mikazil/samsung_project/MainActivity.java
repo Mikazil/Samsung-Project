@@ -79,13 +79,28 @@ public class MainActivity extends AppCompatActivity {
         binding.humidity.setText(String.format("%d%%", data.getHumidity()));
         binding.windSpeed.setText(String.format("%.1f m/s", data.getWindSpeed()));
         binding.pressureValue.setText(String.format("%.0f hPa", data.getPressure()));
-        binding.weatherCondition.setText(getCloudinessDescription(data.getClouds()));
+        //binding.weatherCondition.setText(getCloudinessDescription(data.getClouds()));
+        binding.weatherCondition.setText(data.getWeatherDescription());
+        binding.tempMin.setText(String.format("%.1f°C", data.getMinTemp()));
+        binding.tempMax.setText(String.format("%.1f°C", data.getMaxTemp()));
+        binding.weatherIcon.setText(getWeatherEmoji(data.getIconCode()));
     }
 
-    private String getCloudinessDescription(int cloudiness) {
-        if (cloudiness <= 10) return "Ясно ☀️";
-        else if (cloudiness <= 30) return "Малооблачно 🌤";
-        else if (cloudiness <= 70) return "Переменная облачность ⛅";
-        else return "Пасмурно ☁️";
+    private String getWeatherEmoji(String iconCode) {
+        switch (iconCode) {
+            case "01d": return "☀️"; // Ясно (день)
+            case "01n": return "🌙"; // Ясно (ночь)
+            case "02d": return "⛅"; // Малооблачно (день)
+            case "02n": return "☁️"; // Малооблачно (ночь)
+            case "03d": case "03n": return "☁️"; // Облачно
+            case "04d": case "04n": return "☁️️"; // Пасмурно
+            case "09d": case "09n": return "🌧️"; // Ливень
+            case "10d": return "🌦️"; // Дождь (день)
+            case "10n": return "🌧️"; // Дождь (ночь)
+            case "11d": case "11n": return "⛈️"; // Гроза
+            case "13d": case "13n": return "❄️"; // Снег
+            case "50d": case "50n": return "🌫️"; // Туман
+            default: return "❓";
+        }
     }
 }
