@@ -112,6 +112,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/temperature"
         app:layout_constraintWidth_percent="0.95"/>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/recommendationCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#80FFFFFF"
+        app:strokeWidth="1dp"
+        app:cardBackgroundColor="#20FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feelsLike"
+        app:layout_constraintWidth_percent="0.95">
+
+        <TextView
+            android:id="@+id/recommendationText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Наденьте легкую одежду, сегодня тепло!"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp"
+            android:gravity="center"/>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/feelsLike"
@@ -127,42 +153,7 @@
         app:layout_constraintTop_toBottomOf="@id/weatherCondition"
         app:layout_constraintWidth_percent="0.95"/>
 
-    <LinearLayout
-        android:id="@+id/minmaxtemps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="12dp"
-        android:paddingVertical="8dp"
-        android:paddingHorizontal="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/feelsLike">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tempMin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="18°"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="24dp"
-            android:layout_marginHorizontal="12dp"
-            android:background="#80FFFFFF" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tempMax"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="28°"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"/>
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -171,7 +162,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/minmaxtemps"
+        app:layout_constraintTop_toBottomOf="@id/recommendationCard"
         app:layout_constraintWidth_percent="0.95">
 
         <LinearLayout

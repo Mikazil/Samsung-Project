@@ -48,25 +48,29 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Инициализация сервиса геолокации
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Получение флага из интента
+        // Получаем данные из интента
         if (getIntent() != null) {
             useGeolocation = getIntent().getBooleanExtra("use_geolocation", false);
+            String city = getIntent().getStringExtra("city");
+
+            // Проверяем наличие города
+            if (city != null && !city.isEmpty() && !useGeolocation) {
+                fetchWeatherData(city);
+            } else if (useGeolocation) {
+                requestLocationPermission();
+            } else {
+                // По умолчанию показываем Москву
+                fetchWeatherData("Moscow");
+            }
+        } else {
+            // Если интент пустой, показываем Москву
+            fetchWeatherData("Moscow");
         }
 
         setupSearchView();
         setupBackButton();
-
-        // Определение источника данных для погоды
-        if (useGeolocation) {
-            requestLocationPermission();
-        } else {
-            // По умолчанию показываем Москву
-            fetchWeatherData("Moscow");
-        }
-
         DynamicColors.applyToActivityIfAvailable(this);
     }
 
@@ -87,7 +91,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private void updateRecommendation(double temperature, String weatherCondition) {
+        TextView recommendationText = findViewById(R.id.recommendationText);
+        StringBuilder recommendation = new StringBuilder();
 
+        // Рекомендации по температуре
+        if (temperature < -10) {
+            recommendation.append("❄️ Очень холодно! Наденьте теплую зимнюю одежду, шапку, шарф и варежки.");
+        } else if (temperature < 0) {
+            recommendation.append("⛄ Холодно. Наденьте теплую куртку, шапку и шарф.");
+        } else if (temperature < 10) {
+            recommendation.append("🧥 Прохладно. Рекомендуется надеть ветровку или свитер.");
+        } else if (temperature < 20) {
+            recommendation.append("👕 Тепло! Можно надеть легкую куртку или свитер.");
+        } else if (temperature < 30) {
+            recommendation.append("🩳 Жарко! Наденьте футболку и шорты.");
+        } else {
+            recommendation.append("🥵 Очень жарко! Наденьте легкую одежду и используйте солнцезащитные средства.");
+        }
+
+        // Добавляем эмодзи для лучшей визуализации
+        recommendation.append("\n\n");
+
+        // Рекомендации по осадкам
+        if (weatherCondition.contains("дождь") || weatherCondition.contains("ливень")) {
+            recommendation.append("☔ Возьмите зонт, ожидается дождь.");
+        } else if (weatherCondition.contains("снег")) {
+            recommendation.append("⛄ Ожидается снег, оденьтесь теплее.");
+        } else if (weatherCondition.contains("гроза")) {
+            recommendation.append("⚡ Будет гроза, будьте осторожны.");
+        } else if (weatherCondition.contains("солнце") || weatherCondition.contains("ясно")) {
+            recommendation.append("😎 Солнечно, не забудьте солнцезащитные очки.");
+        } else if (weatherCondition.contains("облач") || weatherCondition.contains("пасмурно")) {
+            recommendation.append("⛅ Облачно, но дождь не ожидается.");
+        } else {
+            recommendation.append("👍 Хорошая погода для прогулки!");
+        }
+
+        recommendationText.setText(recommendation.toString());
+    }
     private void setupBackButton() {
         ImageButton backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
@@ -262,11 +304,10 @@ public class MainActivity extends AppCompatActivity {
         binding.windSpeed.setText(String.format("%.1f м/с", data.getWindSpeed()));
         binding.pressureValue.setText(String.format("%.0f гПа", data.getPressure()));
         binding.weatherCondition.setText(capitalizeFirstLetter(data.getWeatherDescription()));
-        binding.tempMin.setText(String.format("%.1f°C", data.getMinTemp()));
-        binding.tempMax.setText(String.format("%.1f°C", data.getMaxTemp()));
         binding.weatherIcon.setText(getWeatherEmoji(data.getIconCode()));
         binding.location.setText(data.getCityName());
         binding.currentDate.setText(formatDate(data.getTimestamp(), data.getTimezone()));
+        updateRecommendation(data.getTemperature(), data.getWeatherDescription().toLowerCase());
     }
 
     private String capitalizeFirstLetter(String input) {

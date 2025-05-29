@@ -66,7 +66,7 @@ public class WeatherData {
             long dt = item.getLong("dt") * 1000;
 
             JSONObject main = item.getJSONObject("main");
-            double temp = main.getDouble("temp") - 273.15;
+            double temp = main.getDouble("temp");
 
             JSONArray weatherArray = item.getJSONArray("weather");
             JSONObject weather = weatherArray.getJSONObject(0);
