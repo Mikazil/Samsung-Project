@@ -1,11 +1,13 @@
 package com.mikazil.samsung_project;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -17,12 +19,18 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingsActivity";
+    private static final int REQUEST_LOCATION_PERMISSIONS = 102;
     private static final int REQUEST_EXACT_ALARM_PERMISSION = 101;
     private SwitchCompat notificationSwitch;
     private SharedPreferences prefs;
@@ -76,6 +84,26 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void requestExactAlarmPermission() {
         try {
+            // Запрашиваем необходимые разрешения
+            List<String> permissions = new ArrayList<>();
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+            }
+
+            if (!permissions.isEmpty()) {
+                ActivityCompat.requestPermissions(this,
+                        permissions.toArray(new String[0]),
+                        REQUEST_LOCATION_PERMISSIONS);
+                return;
+            }
+
             Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
             startActivityForResult(intent, REQUEST_EXACT_ALARM_PERMISSION);
         } catch (Exception e) {
@@ -90,16 +118,14 @@ public class SettingsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_EXACT_ALARM_PERMISSION) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                if (alarmManager != null && alarmManager.canScheduleExactAlarms()) {
-                    // Если разрешение получено, включаем уведомления
-                    saveNotificationPreference(true);
-                } else {
-                    // Если разрешение не дано, отключаем переключатель
-                    notificationSwitch.setChecked(false);
-                    Toast.makeText(this, "Разрешение не предоставлено. Уведомления отключены", Toast.LENGTH_SHORT).show();
-                }
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager != null && alarmManager.canScheduleExactAlarms()) {
+                // Если разрешение получено, включаем уведомления
+                saveNotificationPreference(true);
+            } else {
+                // Если разрешение не дано, отключаем переключатель
+                notificationSwitch.setChecked(false);
+                Toast.makeText(this, "Разрешение не предоставлено. Уведомления отключены", Toast.LENGTH_SHORT).show();
             }
         }
     }

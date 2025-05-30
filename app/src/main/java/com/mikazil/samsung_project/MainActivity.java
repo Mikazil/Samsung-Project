@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -33,6 +34,7 @@ import com.mikazil.samsung_project.databinding.ActivityMainBinding;
 import org.json.JSONException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private static final String PREFS_CITY = "last_city";
     private static final String PREFS_USE_GEOLOCATION = "use_geolocation";
+    private static final int FOREGROUND_LOCATION_PERMISSION_REQUEST_CODE = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,11 +173,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestLocationPermission() {
+        List<String> permissions = new ArrayList<>();
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+            }
+        }
+
+        if (!permissions.isEmpty()) {
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    permissions.toArray(new String[0]),
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else {
             getLocation();
@@ -186,11 +201,19 @@ public class MainActivity extends AppCompatActivity {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            boolean allGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    allGranted = false;
+                    break;
+                }
+            }
+
+            if (allGranted) {
                 getLocation();
             } else {
-                // Если разрешение не дано, показываем Москву
                 Toast.makeText(this, "Разрешение на геолокацию не получено", Toast.LENGTH_SHORT).show();
                 fetchWeatherData("Moscow");
                 savePreferences("Moscow", false);
