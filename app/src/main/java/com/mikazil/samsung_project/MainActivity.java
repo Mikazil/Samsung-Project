@@ -3,9 +3,11 @@ package com.mikazil.samsung_project;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -40,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     private FusedLocationProviderClient fusedLocationClient;
     private boolean useGeolocation = false;
+    private SharedPreferences preferences;
+    private static final String PREFS_CITY = "last_city";
+    private static final String PREFS_USE_GEOLOCATION = "use_geolocation";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,31 +53,52 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        SwitchCompat notificationSwitch = findViewById(R.id.notification_switch);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        // Получаем данные из интента
-        if (getIntent() != null) {
-            useGeolocation = getIntent().getBooleanExtra("use_geolocation", false);
-            String city = getIntent().getStringExtra("city");
+        // Инициализация SharedPreferences
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-            // Проверяем наличие города
+        // Восстановление настроек из SharedPreferences
+        useGeolocation = preferences.getBoolean(PREFS_USE_GEOLOCATION, false);
+        String savedCity = preferences.getString(PREFS_CITY, "Moscow");
+
+        // Обработка входящего интента
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("use_geolocation")) {
+            useGeolocation = intent.getBooleanExtra("use_geolocation", false);
+            String city = intent.getStringExtra("city");
+
+            // Сохраняем настройки из интента
+            savePreferences(city != null ? city : savedCity, useGeolocation);
+
             if (city != null && !city.isEmpty() && !useGeolocation) {
                 fetchWeatherData(city);
             } else if (useGeolocation) {
                 requestLocationPermission();
             } else {
-                // По умолчанию показываем Москву
-                fetchWeatherData("Moscow");
+                fetchWeatherData(savedCity);
             }
         } else {
-            // Если интент пустой, показываем Москву
-            fetchWeatherData("Moscow");
+            // Используем сохраненные настройки
+            if (useGeolocation) {
+                requestLocationPermission();
+            } else {
+                fetchWeatherData(savedCity);
+            }
         }
 
         setupSearchView();
         setupBackButton();
         DynamicColors.applyToActivityIfAvailable(this);
+    }
+
+    // Сохранение настроек в SharedPreferences
+    private void savePreferences(String city, boolean useGeo) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PREFS_CITY, city);
+        editor.putBoolean(PREFS_USE_GEOLOCATION, useGeo);
+        editor.apply();
     }
 
     private void setupSearchView() {
@@ -81,16 +108,17 @@ public class MainActivity extends AppCompatActivity {
                 // При поиске отключаем геолокацию
                 useGeolocation = false;
                 fetchWeatherData(query);
+                savePreferences(query, false); // Сохраняем город
                 binding.searchView.clearFocus();
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
         });
     }
+
     private void updateRecommendation(double temperature, String weatherCondition) {
         TextView recommendationText = findViewById(R.id.recommendationText);
         StringBuilder recommendation = new StringBuilder();
@@ -130,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
         recommendationText.setText(recommendation.toString());
     }
+
     private void setupBackButton() {
         ImageButton backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
@@ -164,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 // Если разрешение не дано, показываем Москву
                 Toast.makeText(this, "Разрешение на геолокацию не получено", Toast.LENGTH_SHORT).show();
                 fetchWeatherData("Moscow");
+                savePreferences("Moscow", false);
             }
         }
     }
@@ -185,11 +215,13 @@ public class MainActivity extends AppCompatActivity {
                         // Если местоположение не найдено, показываем Москву
                         Toast.makeText(this, "Местоположение не найдено", Toast.LENGTH_SHORT).show();
                         fetchWeatherData("Moscow");
+                        savePreferences("Moscow", false);
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Location", "Error getting location", e);
                     fetchWeatherData("Moscow");
+                    savePreferences("Moscow", false);
                 });
     }
 
@@ -204,7 +236,11 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(String response) {
                 try {
                     WeatherData data = WeatherData.fromJson(response);
-                    runOnUiThread(() -> updateUI(data));
+                    runOnUiThread(() -> {
+                        updateUI(data);
+                        // Сохраняем город из API и режим геолокации
+                        savePreferences(data.getCityName(), true);
+                    });
                     // Запрашиваем прогноз по тем же координатам
                     fetchForecastByCoordinates(lat, lon);
                 } catch (JSONException e) {
@@ -215,9 +251,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Throwable t) {
                 Log.e("TAG", "API call failed", t);
-                runOnUiThread(() ->
-                        Toast.makeText(MainActivity.this, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
-                );
+                runOnUiThread(() -> {
+                    Toast.makeText(MainActivity.this, "Ошибка получения данных", Toast.LENGTH_SHORT).show();
+                    savePreferences("Moscow", false);
+                });
             }
         });
     }
@@ -229,7 +266,10 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(String response) {
                 try {
                     WeatherData data = WeatherData.fromJson(response);
-                    runOnUiThread(() -> updateUI(data));
+                    runOnUiThread(() -> {
+                        updateUI(data);
+                        savePreferences(city, false);
+                    });
                     fetchForecastData(city);
                 } catch (JSONException e) {
                     Log.e("TAG", "JSON parsing error", e);
@@ -239,9 +279,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Throwable t) {
                 Log.e("TAG", "API call failed", t);
-                runOnUiThread(() ->
-                        Toast.makeText(MainActivity.this, "Город не найден", Toast.LENGTH_SHORT).show()
-                );
+                runOnUiThread(() -> {
+                    Toast.makeText(MainActivity.this, "Город не найден", Toast.LENGTH_SHORT).show();
+                    // При ошибке загружаем сохраненный город
+                    String savedCity = preferences.getString(PREFS_CITY, "Moscow");
+                    fetchWeatherData(savedCity);
+                });
             }
         });
     }

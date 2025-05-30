@@ -2,6 +2,7 @@ package com.mikazil.samsung_project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +23,8 @@ public class MainMenuActivity extends AppCompatActivity {
 
         searchView = findViewById(R.id.searchView);
         weatherButton = findViewById(R.id.weatherButton);
-
+        ImageButton settingsButton = findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(v -> {Intent intent = new Intent(MainMenuActivity.this, SettingsActivity.class);startActivity(intent);});
         // Обработчик для кнопки "Показать погоду" - теперь использует геолокацию
         weatherButton.setOnClickListener(v -> {
             openWeatherActivityWithGeolocation();
