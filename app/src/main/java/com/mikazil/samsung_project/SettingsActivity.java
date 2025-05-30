@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.preference.PreferenceManager;
+import android.preference.PreferenceManager;
 import java.util.Locale;
 
 public class SettingsActivity extends AppCompatActivity {

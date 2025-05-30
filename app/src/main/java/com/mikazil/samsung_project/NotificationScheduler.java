@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
-import androidx.preference.PreferenceManager;
+import android.preference.PreferenceManager;
 
 import java.util.Calendar;
 

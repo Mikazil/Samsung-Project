@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         SwitchCompat notificationSwitch = findViewById(R.id.notification_switch);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         // Инициализация SharedPreferences
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 

@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -35,14 +36,13 @@ public class WeatherNotificationService extends Service {
         super.onCreate();
         createNotificationChannel();
 
-        // Для Android 8.0+ создаем уведомление для foreground service
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Weather Service")
                 .setContentText("Updating weather data")
                 .setSmallIcon(R.drawable.ic_weather)
                 .build();
 
-        startForeground(SERVICE_NOTIFICATION_ID, notification);
+        startForeground(SERVICE_NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);
     }
 
     @Override
